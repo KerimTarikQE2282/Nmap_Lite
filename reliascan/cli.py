@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-nmap-lite: consistency-checked nmap wrapper.
+reliascan: consistency-checked nmap wrapper.
 
 Runs SYN, TCP, and/or UDP scans N times each against a target, then flags
 ports whose state was NOT identical across all runs ("flaky" ports) vs.
@@ -12,15 +12,15 @@ EDUCATIONAL USE ONLY. See banner/warning on startup.
 import argparse
 import sys
 
-from nmap_lite.banner import print_intro
-from nmap_lite.scanner import run_repeated_scans, NmapNotFoundError, SCAN_PRESETS
-from nmap_lite.consistency import check_consistency
-from nmap_lite.report import print_report, save_json
+from reliascan.banner import print_intro
+from reliascan.scanner import run_repeated_scans, NmapNotFoundError, SCAN_PRESETS
+from reliascan.consistency import check_consistency
+from reliascan.report import print_report, save_json
 
 
 def build_parser():
     p = argparse.ArgumentParser(
-        prog="nmap-lite",
+        prog="reliascan",
         description="Consistency-checked nmap wrapper (SYN/TCP/UDP, N repeats, diffed)."
     )
     p.add_argument("target", help="Target host/IP/CIDR to scan (must be authorized).")
@@ -51,7 +51,7 @@ def confirm_authorization():
     resp = input(
         "Type YES to confirm you are authorized to scan this target: "
     ).strip()
-    if resp != ("YES" || "yes" || "Y" || "y" ):
+    if resp.lower() not in (  "yes" or "y" ):
         print("Authorization not confirmed. Exiting. :( ")
         sys.exit(1)
 
@@ -85,4 +85,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\nProgram stopped by user.")
+        sys.exit(1)

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 #
-# nmap-lite.sh — bash launcher for the nmap-lite consistency-checked scanner.
+# reliascan.sh — bash launcher for the reliascan consistency-checked scanner.
 #
 # EDUCATIONAL USE ONLY. You are responsible for ensuring you have explicit
 # authorization to scan any target you pass to this script.
 #
 # Usage:
-#   ./nmap-lite.sh <target> [extra python args...]
+#   ./reliascan.sh <target> [extra python args...]
 #
 # Examples:
-#   ./nmap-lite.sh 127.0.0.1
-#   ./nmap-lite.sh 192.168.1.10 --scans syn tcp --repeats 5
-#   ./nmap-lite.sh 10.0.0.5 --scans udp --json-out report.json --yes
+#   ./reliascan.sh 127.0.0.1
+#   ./reliascan.sh 192.168.1.10 --scans syn tcp --repeats 5
+#   ./reliascan.sh 10.0.0.5 --scans udp --json-out report.json --yes
 #
 set -euo pipefail
 
@@ -44,7 +44,7 @@ fi
 # --- Note on privileges ---
 # SYN (-sS) and UDP (-sU) scans require raw socket access (root / sudo / cap_net_raw).
 # TCP connect (-sT) scans do not. If the user requests syn/udp without enough
-# privilege, nmap itself will report the error and nmap-lite will surface it
+# privilege, nmap itself will report the error and reliascan will surface it
 # per-run rather than failing silently.
 if [ "$EUID" -ne 0 ]; then
     echo "[i] Note: not running as root. SYN and UDP scans typically require"
@@ -53,4 +53,4 @@ if [ "$EUID" -ne 0 ]; then
 fi
 
 cd "$SCRIPT_DIR"
-exec "$PYTHON_BIN" -m nmap_lite.cli "$@"
+exec "$PYTHON_BIN" -m reliascan.cli "$@"
